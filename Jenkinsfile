@@ -5,7 +5,7 @@ pipeline {
     stage('hellow') {
       steps {
         script {
-          sh "say ${ansible_ver}"
+          sh "echo ${ansible_ver}"
         }
       }
     }
