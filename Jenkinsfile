@@ -7,6 +7,7 @@ pipeline {
         script {
           def cur_cluster = sh(script:"kubectl config current-context", returnStatus: true)
           sh "echo ${cur_cluster}"
+          sh "echo ${cur_cluster}"
         }
       }
     }
