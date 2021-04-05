@@ -5,7 +5,8 @@ pipeline {
     stage('hellow') {
       steps {
         script {
-          sh "echo ${ansible_ver}"
+          def cur_cluster = sh(script:"kubectl config current-context"
+          sh "echo ${cur_cluster}"
         }
       }
     }
