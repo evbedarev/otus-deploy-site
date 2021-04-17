@@ -18,7 +18,7 @@ pipeline {
            // script {
            //   sh "echo $VAULT_PASS"
            // }
-            ansiblePlaybook colorized: true, credentialsId: '', forks: 2, inventory: 'hosts', limit: '', playbook: 'site.yml', sudoUser: null, vaultCredentialsId: 'vault_password'
+            ansiblePlaybook colorized: true, credentialsId: 'ansible_user', forks: 2, inventory: 'hosts', limit: '', playbook: 'site.yml', sudoUser: null, vaultCredentialsId: 'vault_password'
           //}
         }
       }
