@@ -15,7 +15,7 @@ pipeline {
       steps {
         ansiColor('xterm') {
           withCredentials([string(credentialsId: 'vault_password', variable: 'VAULT_PASS')]) {
-            ansiblePlabook colorized: true,
+            ansiblePlaybook colorized: true,
                 inventory: "hosts",
                 playbook: "site.yml",
                 vaultCredentialsId: "$VAULT_PASS",
