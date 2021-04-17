@@ -5,7 +5,7 @@
     dest: ./account.json
 
 - name: create a cluster
-  remote_user: {{ r_user }}
+  remote_user: "{{ r_user }}"
   gcp_container_cluster:
     name: "{{ gkename }}"
     initial_node_count: "{{ initial_node_count }}"
