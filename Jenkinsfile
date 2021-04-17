@@ -14,12 +14,12 @@ pipeline {
     stage('deploy') {
       steps {
         ansiColor('xterm') {
-          withCredentials([string(credentialsId: 'vault_password', variable: 'VAULT_PASS')]) {
-            script {
-              sh "echo $VAULT_PASS"
-            }
-            ansiblePlaybook colorized: true, credentialsId: '', forks: 2, inventory: 'hosts', limit: '', playbook: 'site.yml', sudoUser: null, extras: "--vault-password-file ${VAULT_PASS}"
-          }
+          //withCredentials([string(credentialsId: 'vault_password', variable: 'VAULT_PASS')]) {
+           // script {
+           //   sh "echo $VAULT_PASS"
+           // }
+            ansiblePlaybook colorized: true, credentialsId: '', forks: 2, inventory: 'hosts', limit: '', playbook: 'site.yml', sudoUser: null, vaultCredetialsId: 'vault_password'
+          //}
         }
       }
     }
