@@ -18,7 +18,7 @@ pipeline {
             ansiblePlaybook colorized: true,
                 inventory: "hosts",
                 playbook: "site.yml",
-                vaultCredentialsId: "$VAULT_PASS",
+                vaultCredentialsId: "$VAULT_PASS"
           }
         }
       }
