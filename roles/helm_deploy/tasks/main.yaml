@@ -1,5 +1,5 @@
 - name: Deploy Grafana chart from local path
   community.kubernetes.helm:
-    name: test
+    name: hipster-shop-site
     release_namespace: default
     chart_ref: ./hipster-shop

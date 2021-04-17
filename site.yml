@@ -4,4 +4,4 @@
   gather_facts: false
   roles:
     - create_gke
-    #- helm_deploy
+    - helm_deploy
