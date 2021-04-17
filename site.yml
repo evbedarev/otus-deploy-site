@@ -1,0 +1,7 @@
+- name: gcp
+  hosts: all
+  connection: local
+  gather_facts: false
+  roles:
+    - create_gke
+    #- helm_deploy
