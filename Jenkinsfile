@@ -14,12 +14,7 @@ pipeline {
     stage('deploy') {
       steps {
         ansiColor('xterm') {
-          //withCredentials([string(credentialsId: 'vault_password', variable: 'VAULT_PASS')]) {
-           // script {
-           //   sh "echo $VAULT_PASS"
-           // }
-            ansiblePlaybook colorized: true, credentialsId: 'ansible_user', forks: 2, inventory: 'hosts', limit: '', playbook: 'site.yml', sudoUser: null, vaultCredentialsId: 'vault_password', extras: '-vv'
-          //}
+            ansiblePlaybook colorized: true, credentialsId: 'ansible_user', inventory: 'hosts', limit: '', playbook: 'site.yml', sudoUser: null, vaultCredentialsId: 'vault_password', extras: '-vv -e ansible_pyhton_interpreter="/usr/bin/pyhton"'
         }
       }
     }
