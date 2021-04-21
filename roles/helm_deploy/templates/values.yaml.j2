@@ -5,7 +5,7 @@ replicas: 1
 ip: {{ ip_addr.stdout }}
 
 service:
-  type: NodePort
+  type: ClusterIP
   port: 80
   targetPort: 8080
   NodePort: 30001

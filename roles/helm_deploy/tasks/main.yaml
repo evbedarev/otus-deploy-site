@@ -1,7 +1,21 @@
-- name: get ip cluster
-  #shell: kubectl get ep | grep kubernetes| awk '{match($2,"[0-9]+.[0-9]+.[0-9]+.[0-9]+",a)}END{print a[0]}'
-  shell: kubectl get svc -n ingress | grep nginx-ingress-controller | awk '{match($4,"[0-9]+.[0-9]+.[0-9]+.[0-9]+",a)}END{print a[0]}'
+- name: Create ingress ns
+  shell: kubectl create ns ingress
+  ignore_errors: true
+
+- name: Deploy nginx-ingress
+  remote_user: "{{ r_user }}"
+  community.kubernetes.helm:
+    chart_repo_url: https://helm.nginx.com/stable
+    name: nginx-ingress 
+    release_namespace: default
+    chart_ref: nginx-ingress
+
+- name: get ip cluster 
+  shell: kubectl get svc -n default | grep nginx-ingress-nginx-ingress | awk '{match($4,"[0-9]+.[0-9]+.[0-9]+.[0-9]+",a)}END{print a[0]}'
   register: ip_addr
+  until: ip_addr.stdout != ""
+  retries: 10
+  delay: 30
 
 - name: debug 
   debug:
@@ -13,9 +27,9 @@
     dest: ./hipster-shop/charts/frontend/values.yaml
 
 
-  #- name: Deploy Grafana chart from local path
-  #  remote_user: "{{ r_user }}"
-  #  community.kubernetes.helm:
-  #    name: hipster-shop-site
-  #    release_namespace: default
-  #    chart_ref: ./hipster-shop
+- name: Deploy hipster-shop
+  remote_user: "{{ r_user }}"
+  community.kubernetes.helm:
+    name: hipster-shop-site
+    release_namespace: default
+    chart_ref: ./hipster-shop
