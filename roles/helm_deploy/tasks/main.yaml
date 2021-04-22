@@ -2,6 +2,19 @@
   shell: kubectl create ns ingress
   ignore_errors: true
 
+- name: create secret from template
+  template:
+    src: secret-ingress.json.j2
+    dest: ./01-secrets.json
+
+- name: apply secret
+  shell: kubectl apply -f 01-secrets.json
+
+- name: remove secret
+  file:
+    path: ./01-secrets.json
+    state: absent
+
 - name: Deploy nginx-ingress
   remote_user: "{{ r_user }}"
   community.kubernetes.helm:

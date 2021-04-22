@@ -5,6 +5,10 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
 spec:
+  tls:
+    - hosts:
+        - shop.{{ .Values.ip }}.nip.io
+      secretName: ingress-tls
   rules:
     - host: shop.{{ .Values.ip }}.nip.io
       http:
