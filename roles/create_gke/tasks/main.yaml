@@ -1,4 +1,4 @@
----
+--- 
 - name: create gke cluster
   block:
   - name: create accounts file from template
@@ -30,6 +30,9 @@
     gcp_container_node_pool:
       name: "{{ npname }}"
       initial_node_count: "{{ np_initial_node_count }}"
+      config:
+        machine_type: "{{ machine_type }}"
+        disk_size_gb: "{{ disk_size_gb }}"
       management:
         auto_repair: true
         auto_upgrade: true
@@ -41,8 +44,42 @@
       scopes:
         - https://www.googleapis.com/auth/cloud-platform
       state: present
-  
+
+  - name: create infra node pool
+    gcp_container_node_pool:
+      name: "{{ infra_node_name }}"
+      initial_node_count: "{{ infra_node_count }}"
+      config:
+        machine_type: "{{ machine_type }}"
+        disk_size_gb: "{{ disk_size_gb }}"
+      management:
+        auto_repair: true
+        auto_upgrade: true
+      cluster: "{{ cluster }}"
+      zone: "{{ zone }}"
+      project: "{{ project }}"
+      auth_kind: "{{ auth_kind }}"
+      service_account_file: "{{ service_account_file }}"
+      scopes:
+        - https://www.googleapis.com/auth/cloud-platform
+      state: present
+
   - name: add cluster in context
     shell:  /home/mj/Documents/google-cloud-sdk/bin/gcloud container clusters get-credentials {{ gkename }}
+
+  - name: get infra nodes
+    shell: kubectl get nodes -o wide | grep {{ infra_node_name }} | awk '{ORS=FS;print $1}'
+    register: inf_nodes
+
+  - name: taint infa nodes
+    shell: kubectl taint nodes {{ inf_nodes.stdout }} node-role=infra:NoSchedule --overwrite
+  
+  - name: get infra nodes
+    shell: kubectl get nodes -o wide | grep {{ npname }} | awk '{ORS=FS;print $1}'
+    register: app_nodes
+
+  - name: taint app nodes
+    shell: kubectl taint nodes {{ app_nodes.stdout }} node-role=application:NoSchedule --overwrite
   when: need_create_cluster
   
+

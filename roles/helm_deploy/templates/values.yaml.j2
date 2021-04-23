@@ -10,3 +10,7 @@ service:
   targetPort: 8080
   NodePort: 30001
 
+tolerations: 
+  key: node-role
+  value: application
+  effect: NoSchedule

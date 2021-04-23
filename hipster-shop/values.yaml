@@ -1,0 +1,4 @@
+tolerations: 
+  key: "node-role"
+  value: "application"
+  effect: "NoSchedule"

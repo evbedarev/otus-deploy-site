@@ -1,6 +1,6 @@
 gkename: cluster-1
 initial_node_count: 2
-machine_type: n1-standard-1
+machine_type: n1-standard-2
 disk_size_gb: 100
 zone: 'us-central1-a'
 project: alert-palace-304914
@@ -8,4 +8,8 @@ auth_kind: serviceaccount
 service_account_file: account.json
 #gke node pool
 npname: gke-pool
-np_initial_node_count: 3
+np_initial_node_count: 2
+
+#infra node
+infra_node_name: infra-pool
+infra_node_count: 2

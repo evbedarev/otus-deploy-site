@@ -41,6 +41,11 @@ spec:
           periodSeconds: 15
           exec:
             command: ["/bin/grpc_health_probe", "-addr=:9555"]
+      tolerations:
+      - key: "{{ .Values.tolerations.key }}"
+        operator: "Equal"
+        value: "{{ .Values.tolerations.value }}"
+        effect: "{{ .Values.tolerations.effect }}"
 ---
 apiVersion: v1
 kind: Service
@@ -99,6 +104,11 @@ spec:
           periodSeconds: 10
           exec:
             command: ["/bin/grpc_health_probe", "-addr=:7070", "-rpc-timeout=5s"]
+      tolerations:
+      - key: "{{ .Values.tolerations.key }}"
+        operator: "Equal"
+        value: "{{ .Values.tolerations.value }}"
+        effect: "{{ .Values.tolerations.effect }}"
 ---
 apiVersion: v1
 kind: Service
@@ -163,6 +173,11 @@ spec:
             limits:
               cpu: 200m
               memory: 128Mi
+      tolerations:
+      - key: "{{ .Values.tolerations.key }}"
+        operator: "Equal"
+        value: "{{ .Values.tolerations.value }}"
+        effect: "{{ .Values.tolerations.effect }}"
 ---
 apiVersion: v1
 kind: Service
@@ -215,6 +230,11 @@ spec:
           limits:
             cpu: 200m
             memory: 128Mi
+      tolerations:
+      - key: "{{ .Values.tolerations.key }}"
+        operator: "Equal"
+        value: "{{ .Values.tolerations.value }}"
+        effect: "{{ .Values.tolerations.effect }}"
 ---
 apiVersion: v1
 kind: Service
@@ -271,6 +291,11 @@ spec:
           limits:
             cpu: 200m
             memory: 128Mi
+      tolerations:
+      - key: "{{ .Values.tolerations.key }}"
+        operator: "Equal"
+        value: "{{ .Values.tolerations.value }}"
+        effect: "{{ .Values.tolerations.effect }}"
 ---
 apiVersion: v1
 kind: Service
@@ -322,6 +347,11 @@ spec:
           limits:
             cpu: 200m
             memory: 128Mi
+      tolerations:
+      - key: "{{ .Values.tolerations.key }}"
+        operator: "Equal"
+        value: "{{ .Values.tolerations.value }}"
+        effect: "{{ .Values.tolerations.effect }}"
 ---
 apiVersion: v1
 kind: Service
@@ -376,6 +406,11 @@ spec:
           limits:
             cpu: 200m
             memory: 128Mi
+      tolerations:
+      - key: "{{ .Values.tolerations.key }}"
+        operator: "Equal"
+        value: "{{ .Values.tolerations.value }}"
+        effect: "{{ .Values.tolerations.effect }}"
 ---
 apiVersion: v1
 kind: Service
@@ -434,6 +469,11 @@ spec:
           limits:
             cpu: 200m
             memory: 450Mi
+      tolerations:
+      - key: "{{ .Values.tolerations.key }}"
+        operator: "Equal"
+        value: "{{ .Values.tolerations.value }}"
+        effect: "{{ .Values.tolerations.effect }}"
 ---
 apiVersion: v1
 kind: Service
@@ -488,6 +528,11 @@ spec:
           limits:
             cpu: 200m
             memory: 128Mi
+      tolerations:
+      - key: "{{ .Values.tolerations.key }}"
+        operator: "Equal"
+        value: "{{ .Values.tolerations.value }}"
+        effect: "{{ .Values.tolerations.effect }}"
 ---
 apiVersion: v1
 kind: Service
@@ -544,6 +589,11 @@ spec:
       volumes:
       - name: redis-data
         emptyDir: {}
+      tolerations:
+      - key: "{{ .Values.tolerations.key }}"
+        operator: "Equal"
+        value: "{{ .Values.tolerations.value }}"
+        effect: "{{ .Values.tolerations.effect }}"
 ---
 apiVersion: v1
 kind: Service
