@@ -1,0 +1,7 @@
+#gke node pool
+npname: gke-pool
+np_initial_node_count: 2
+
+#infra node
+infra_node_name: infra-pool
+infra_node_count: 2

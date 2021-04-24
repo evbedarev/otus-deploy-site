@@ -1,0 +1,43 @@
+- name: get ip cluster 
+  shell: kubectl get svc -n default | grep nginx-ingress-nginx-ingress | awk '{match($4,"[0-9]+.[0-9]+.[0-9]+.[0-9]+",a)}END{print a[0]}'
+  register: ip_addr
+  until: ip_addr.stdout != ""
+  retries: 10
+  delay: 30
+
+- name: create values from template
+  template:
+    src: monitoring-values.yaml.j2
+    dest: ./monitoring-values.yaml
+
+- name: Deploy monitoring
+  remote_user: "{{ r_user }}"
+  community.kubernetes.helm:
+    chart_repo_url:  https://prometheus-community.github.io/helm-charts
+    name: kube-prometheus-stack
+    release_namespace: default
+    chart_ref: kube-prometheus-stack
+    values_files: ./monitoring-values.yaml
+
+- name: create grafana ingress from template
+  template:
+    src: grafana-ingress.yaml.j2
+    dest: ./grafana-ingress.yaml
+
+- name: apply ingress
+  shell: kubectl apply -f grafana-ingress.yaml
+
+- name: Deploy grafana Dashboards
+  uri:
+    url: "https://grafana.{{ ip_addr.stdout }}.nip.io/api/dashboards/db"
+    method: POST
+    user: admin
+    password: "{{ grafana_password }}"
+    force_basic_auth: yes
+    status_code: 200
+    validate_certs: false
+    body_format: json
+    body: "{{ lookup('file',item) }}"
+  with_fileglob: dashboards/*.json
+
+

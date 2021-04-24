@@ -1,7 +1,9 @@
-- name: gcp
+- name: gcp 
   hosts: all
   connection: local
   gather_facts: false
   roles:
     - create_gke
+    - deploy_ingress
+    - monitoring
     - helm_deploy

@@ -1,20 +1,19 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: frontend-ingress
+  name: grafana-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
 spec:
   tls:
     - hosts:
-        - shop.{{ .Values.ip }}.nip.io
+        - grafana.{{ .Values.ip }}.nip.io
       secretName: ingress-tls
   rules:
-    - host: shop.{{ .Values.ip }}.nip.io
+    - host: grafana.{{ .Values.ip }}.nip.io
       http:
         paths:
         - path: /
           backend:
-            serviceName: frontend
-            servicePort: {{ .Values.service.port }}
-
+            serviceName: prometheus-grafana 
+            servicePort: 80

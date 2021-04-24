@@ -1,29 +1,3 @@
-- name: Create ingress ns
-  shell: kubectl create ns ingress
-  ignore_errors: true
-
-- name: create secret from template
-  template:
-    src: secret-ingress.json.j2
-    dest: ./01-secrets.json
-
-- name: apply secret
-  shell: kubectl apply -f 01-secrets.json
-
-- name: remove secret
-  file:
-    path: ./01-secrets.json
-    state: absent
-
-- name: Deploy nginx-ingress
-  remote_user: "{{ r_user }}"
-  community.kubernetes.helm:
-    chart_repo_url: https://helm.nginx.com/stable
-    name: nginx-ingress 
-    release_namespace: default
-    chart_ref: nginx-ingress
-    values_files: ./roles/helm_deploy/templates/ingress-values.yaml
-
 - name: get ip cluster 
   shell: kubectl get svc -n default | grep nginx-ingress-nginx-ingress | awk '{match($4,"[0-9]+.[0-9]+.[0-9]+.[0-9]+",a)}END{print a[0]}'
   register: ip_addr
