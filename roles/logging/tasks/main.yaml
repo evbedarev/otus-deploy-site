@@ -1,0 +1,60 @@
+- name: get ip cluster 
+  shell: kubectl get svc -n default | grep nginx-ingress-nginx-ingress | awk '{match($4,"[0-9]+.[0-9]+.[0-9]+.[0-9]+",a)}END{print a[0]}'
+  register: ip_addr
+  until: ip_addr.stdout != ""
+  retries: 10
+  delay: 30
+
+- name: create ns observability
+  shell: kubectl create ns observability
+  ignore_errors: true
+
+- name: install chart elasticsearch 
+  remote_user: "{{ r_user }}"
+  community.kubernetes.helm:
+    chart_repo_url: https://helm.elastic.co 
+    name: elasticsearch
+    release_namespace: observability
+    chart_ref: elasticsearch
+    values_files: ./roles/logging/files/elasticsearch.values.yaml
+
+- name: install chart elasticsearch-exporter
+  remote_user: "{{ r_user }}"
+  community.kubernetes.helm:
+    chart_repo_url:  https://prometheus-community.github.io/helm-charts
+    name: elasticsearch-exporter
+    release_namespace: observability
+    chart_ref: prometheus-elasticsearch-exporter
+    release_values:
+      tolerations: 
+      - key: "node-role"
+        operator: "Equal"
+        value: "infra"
+        effect: "NoSchedule"
+      es:
+        uri: http://elasticsearch-master:9200
+      serviceMonitor:
+        enabled: true
+
+- name: create kibana values from template 
+  template:
+    src: kibana.values.yaml.j2
+    dest: ./kibana-values.yaml
+
+- name: install chart kibana
+  remote_user: "{{ r_user }}"
+  community.kubernetes.helm:
+    chart_repo_url: https://helm.elastic.co
+    name: kibana
+    release_namespace: observability
+    chart_ref: kibana
+    values_files: ./kibana-values.yaml
+
+- name: install chart fluent-bit
+  remote_user: "{{ r_user }}"
+  community.kubernetes.helm:
+    chart_repo_url: https://fluent.github.io/helm-charts
+    name: fluent-bit
+    release_namespace: observability
+    chart_ref: fluent-bit 
+    values_files: ./roles/logging/files/fluent-bit.values.infra.yaml

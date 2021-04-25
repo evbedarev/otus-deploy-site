@@ -1,0 +1,68 @@
+securityContext:
+  readOnlyRootFilesystem: true
+  runAsNonRoot: false
+  runAsUser: 0
+backend:
+  type: es
+  es:
+    host: elasticsearch-master
+    
+config:
+  inputs: |
+    [INPUT]
+        Name tail
+        Path /var/log/containers/nginx*.log
+        Parser nginx_p
+        Tag nginx.*
+        Mem_Buf_Limit 10MB
+        Skip_Long_Lines On
+        Refresh_Interval 5
+
+        #  filters: |
+        #    [FILTER]
+        #        Name modify
+        #        Match nginx.*
+        #        Remove time
+        #        Remove @timestamp
+
+  outputs: |
+    [OUTPUT]
+        Name es
+        Match nginx.*
+        Host elasticsearch-master
+        Index nginx-ingress
+
+  customParsers: |
+    [PARSER]
+        Name nginx_p
+        Format regex
+        Regex ^(?<host>[^ ]*) - - \[(?<time>[^ ]*).*] "(?<method>\S+) .*" (?<code>\d+) .*$
+        Time_key time
+        Time_Format %d/%b/%Y:%H:%M:%S
+        Types code:integer
+
+
+    #rawConfig: |-
+    #  @INCLUDE fluent-bit-service.conf
+    #  @INCLUDE fluent-bit-input.conf
+    #  [INPUT]
+    #    Name             tail
+    #    Path             /var/log/containers/nginx*.log
+    #    Parser           docker
+    #    Tag              nginx.*
+    #    Refresh_Interval 5k
+    #    Mem_Buf_Limit    10MB
+    #    Skip_Long_Lines  On`
+    #  @INCLUDE fluent-bit-filter.conf
+    #  [FILTER]
+    #    Name    modify
+    #    Match   *
+    #    Remove  time
+    #    Remove  @timestamp
+    #  @INCLUDE fluent-bit-output.conf
+
+tolerations:
+  - key: node-role
+    operator: Equal
+    value: infra
+    effect: NoSchedule

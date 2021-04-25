@@ -14,8 +14,9 @@
   roles:
     - deploy_ingress
     - monitoring
+    - logging
 
-- name: deploy infrastructure
+- name: deploy application
   hosts: all
   tags: ['deploy_application']
   connection: local
