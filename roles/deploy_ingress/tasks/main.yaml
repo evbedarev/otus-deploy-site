@@ -35,4 +35,4 @@
     state: absent
 
 - name: apply metricService 
-  shell: kubectl apply -f svc-ingress-exporter.yaml 
+  shell: kubectl apply -f ./roles/deploy_ingress/files/svc-ingress-exporter.yaml 
