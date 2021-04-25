@@ -1,9 +1,24 @@
-- name: gcp 
+- name: create gke cluster
   hosts: all
+  tags: ['install_gke']
   connection: local
   gather_facts: false
   roles:
     - create_gke
+
+- name: deploy infrastructure
+  hosts: all
+  tags: ['deploy_infra']
+  connection: local
+  gather_facts: false
+  roles:
     - deploy_ingress
     - monitoring
+
+- name: deploy infrastructure
+  hosts: all
+  tags: ['deploy_application']
+  connection: local
+  gather_facts: false
+  roles:
     - helm_deploy

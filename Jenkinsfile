@@ -1,20 +1,26 @@
 def ansible_ver = "hellow from jenkins"
 pipeline {
   agent any
+  stage('crete_gke_cluster') {
+    steps {
+      ansiColor('xterm') {
+          ansiblePlaybook colorized: true, credentialsId: 'ansible_user', inventory: 'hosts',tags:"install_gke", limit: '', playbook: 'site.yml', sudoUser: null, vaultCredentialsId: 'vault_password', extras: '-vv -e "ansible_pyhton_interpreter=/usr/bin/pyhton need_create_cluster=${NEED_CREATE_CLUSTER}"'
+      }
+    }
+  }
   stages {
-    stage('hellow') {
+    stage('deploy infra') {
       steps {
-        script {
-          def cur_cluster = sh(script:"kubectl config current-context", returnStatus: true)
-          sh "echo ${cur_cluster}"
-          sh "echo ${cur_cluster}"
+        ansiColor('xterm') {
+            ansiblePlaybook colorized: true, credentialsId: 'ansible_user', inventory: 'hosts',tags:"deploy_infra", limit: '', playbook: 'site.yml', sudoUser: null, vaultCredentialsId: 'vault_password', extras: '-vv -e "ansible_pyhton_interpreter=/usr/bin/pyhton need_create_cluster=${NEED_CREATE_CLUSTER}"'
         }
       }
     }
-    stage('deploy') {
+  stages {
+    stage('deploy infra') {
       steps {
         ansiColor('xterm') {
-            ansiblePlaybook colorized: true, credentialsId: 'ansible_user', inventory: 'hosts', limit: '', playbook: 'site.yml', sudoUser: null, vaultCredentialsId: 'vault_password', extras: '-vv -e "ansible_pyhton_interpreter=/usr/bin/pyhton need_create_cluster=${NEED_CREATE_CLUSTER}"'
+            ansiblePlaybook colorized: true, credentialsId: 'ansible_user', inventory: 'hosts',tags:"deploy_application", limit: '', playbook: 'site.yml', sudoUser: null, vaultCredentialsId: 'vault_password', extras: '-vv -e "ansible_pyhton_interpreter=/usr/bin/pyhton need_create_cluster=${NEED_CREATE_CLUSTER}"'
         }
       }
     }
