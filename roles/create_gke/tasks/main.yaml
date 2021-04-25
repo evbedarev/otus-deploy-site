@@ -11,6 +11,8 @@
     gcp_container_cluster:
       name: "{{ gkename }}"
       initial_node_count: "{{ initial_node_count }}"
+      logging_service: none
+      monitoring_service: none
       master_auth:
         username: "{{ username }}"
         password: "{{ password }}"
