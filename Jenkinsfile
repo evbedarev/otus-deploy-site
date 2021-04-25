@@ -16,6 +16,7 @@ pipeline {
         }
       }
     }
+  }
   stages {
     stage('deploy infra') {
       steps {
