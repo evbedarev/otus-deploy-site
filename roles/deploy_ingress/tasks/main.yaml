@@ -1,5 +1,4 @@
-- name: Create ingress ns 
-  shell: kubectl create ns ingress
+- name: Create ingress ns shell: kubectl create ns ingress
   ignore_errors: true
 
 - name: create secret from template
@@ -33,3 +32,6 @@
   file:
     path: ./ingress-values.yaml
     state: absent
+
+- name: apply metricService 
+  shell: kubectl apply -f svc-ingress-exporter.yaml 

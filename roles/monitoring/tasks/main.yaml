@@ -24,6 +24,9 @@
     src: grafana-ingress.yaml.j2
     dest: ./grafana-ingress.yaml
 
+- name: apply ServiceMonitor for ingress
+  shell: kubectl apply -f sm-ingress-exporter.yaml
+
 - name: apply ingress
   shell: kubectl apply -f grafana-ingress.yaml
 
