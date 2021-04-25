@@ -1,5 +1,5 @@
 - name: get ip cluster 
-  shell: kubectl get svc -n default | grep nginx-ingress-nginx-ingress | awk '{match($4,"[0-9]+.[0-9]+.[0-9]+.[0-9]+",a)}END{print a[0]}'
+  shell: kubectl get svc -n ingress | grep nginx-ingress-nginx-ingress | awk '{match($4,"[0-9]+.[0-9]+.[0-9]+.[0-9]+",a)}END{print a[0]}'
   register: ip_addr
   until: ip_addr.stdout != ""
   retries: 10
