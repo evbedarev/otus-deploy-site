@@ -13,3 +13,4 @@
 
 - Роль monitoring равертывает prometheus, grafana, node-exporter на ноды с taint "infra". Так же деплоиться ингресс для графаны и череза api графаны постим дашборды для nginx-ingress & node-exporter.
 
+- Роль logging развертывает elasticsearch и fluent-bit  на ноды с taint "infra", kibana. Fluent-bit собирает логи с nginx-ingress и отправляет в эластик.
