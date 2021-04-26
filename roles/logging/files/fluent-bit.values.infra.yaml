@@ -18,12 +18,14 @@ config:
         Skip_Long_Lines On
         Refresh_Interval 5
 
-        #  filters: |
-        #    [FILTER]
-        #        Name modify
-        #        Match nginx.*
-        #        Remove time
-        #        Remove @timestamp
+    [INPUT]
+        Name tail
+        Path /var/log/containers/kuber*.log
+        Parser docker
+        Tag kuber.*
+        Mem_Buf_Limit 10MB
+        Skip_Long_Lines On
+        Refresh_Interval 5
 
   outputs: |
     [OUTPUT]
@@ -31,12 +33,17 @@ config:
         Match nginx.*
         Host elasticsearch-master
         Index nginx-ingress
+    [OUTPUT]
+        Name es
+        Match kuber.*
+        Host elasticsearch-master
+        Index kubernetes
 
   customParsers: |
     [PARSER]
         Name nginx_p
         Format regex
-        Regex ^(?<host>[^ ]*) - - \[(?<time>[^ ]*).*] "(?<method>\S+) .*" (?<code>\d+) .*$
+        Regex \{"log":"(?<host>[^ ]*) - - \[(?<time>[^ ]*).*] \\"(?<method>\S+) .*\\" (?<code>\d+) .*$  
         Time_key time
         Time_Format %d/%b/%Y:%H:%M:%S
         Types code:integer
